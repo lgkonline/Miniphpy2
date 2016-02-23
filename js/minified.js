@@ -47,8 +47,7 @@ addTemplateFormatter("nestedTemplateFormatter",function(value,options,internalSe
 if(typeof options==="string"&&options[0]==="{"){options=$.parseJSON(options);}
 var parentElement=options.parentElement||"div";var template=options.template||options;if(options.parentElement)
 return $("<"+parentElement+"/>").loadTemplate(template,value,internalSettings);else
-return $("<"+parentElement+"/>").loadTemplate(template,value,internalSettings).children();});$.fn.loadTemplate=loadTemplate;$.addTemplateFormatter=addTemplateFormatter;})(jQuery);
-/*!
+return $("<"+parentElement+"/>").loadTemplate(template,value,internalSettings).children();});$.fn.loadTemplate=loadTemplate;$.addTemplateFormatter=addTemplateFormatter;})(jQuery);/*!
  * Bootstrap v3.3.5 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
  * Licensed under the MIT license
@@ -848,7 +847,8 @@ Plugin.call($spy,data)})})}(jQuery);function isSet(variable){return typeof varia
 function getObjectFromArray(objArray,IDname,ID){for(var i=0;i<objArray.length;i++){if(objArray[IDname]==ID){return objArray[IDname];}}
 return null;}
 function makeID(objArray,IDname){var newID=1;while(isSet(getObjectFromArray(objArray,IDname,newID))){newID++;}
-return newID;}
-var ApiUri="API";$.ajax({url:ApiUri,data:{action:"config"},type:"GET",dataType:"json",success:function(config){console.log(config);$("#bundles").loadTemplate($("#tpl-bundle"),config.inputs);tplLoaded();}});function tplLoaded(){$(".minify-btn").click(function(){var inputID=$(this).attr("value");var bundle=$(this).closest(".bundle");startLoading();$.ajax({url:ApiUri,data:{action:"minify",inputID:inputID},type:"GET",dataType:"json",success:function(data){console.log(data);},error:function(data){console.log(data);bundle.find(".bundle-error").removeClass("hide");},complete:function(){finishLoading();}});});}
+return newID;}var ApiUri="API";$.ajax({url:ApiUri,data:{action:"config"},type:"GET",dataType:"json",success:function(config){console.log(config);$("#bundles").loadTemplate($("#tpl-bundle"),config.inputs);tplLoaded();}});function tplLoaded(){$(".minify-btn").click(function(){var inputID=$(this).attr("value");var bundle=$(this).closest(".bundle");startLoading();$.ajax({url:ApiUri,data:{action:"minify",inputID:inputID},type:"GET",dataType:"json",success:function(data){console.log(data);bundle.find(".bundle-error").addClass("hide");},error:function(data){console.log(data);var details="";if(isSet(data.responseJSON)){if(data.responseJSON.CSS>200){details+="There was a problem progressing your CSS files. ";}
+if(data.responseJSON.JS>200){details+="There was a problem progressing your JS files. ";}}
+bundle.find(".bundle-error").removeClass("hide");bundle.find(".bundle-error-details").empty();bundle.find(".bundle-error-details").text(details);},complete:function(){finishLoading();}});});}
 function startLoading(){$("#loading, #loading-wrapper").fadeIn();}
 function finishLoading(){$("#loading, #loading-wrapper").fadeOut();}

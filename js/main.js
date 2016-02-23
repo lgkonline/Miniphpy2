@@ -27,10 +27,24 @@ function tplLoaded() {
             dataType: "json",
             success: function(data) {
                 console.log(data);
+                bundle.find(".bundle-error").addClass("hide");
             },
             error: function(data) {
                 console.log(data);
+                var details = "";
+                
+                if (isSet(data.responseJSON)) {
+                    if (data.responseJSON.CSS > 200) {
+                        details += "There was a problem progressing your CSS files. ";
+                    }
+                    if (data.responseJSON.JS > 200) {
+                        details += "There was a problem progressing your JS files. ";
+                    }
+                }
+                
                 bundle.find(".bundle-error").removeClass("hide");
+                bundle.find(".bundle-error-details").empty();
+                bundle.find(".bundle-error-details").text(details);
             },
             complete: function() {
                 finishLoading();

@@ -1,8 +1,8 @@
 <?php
 
 class Minifier {
-	private $urlJS = "http://javascript-minifier.com/raw";
-	private $urlCSS = "http://cssminifier.com/raw";
+	private $urlJS = "https://javascript-minifier.com/raw";
+	private $urlCSS = "https://cssminifier.com/raw";
 	
 	public function minify($format, $content, $compression_option = "remote") {
 		if ($format == "js") {
@@ -39,29 +39,53 @@ class Minifier {
         $status_code = 200;    
         
         $formatArea = $dom->getElementById("miniphpy-" . $format);
+        
+        // check if there is a root path given in the HTML document
+        $metaElements = $dom->getElementsByTagName("meta");
+        $miniphpyRootPath = dirname($input->inputFile) . DIRECTORY_SEPARATOR;
+        
+        foreach ($metaElements as $currMeta) {
+            if ($currMeta->getAttribute("name") == "miniphpy-root") {
+                // is miniphpy-root meta tag
+                $miniphpyRootPath = $currMeta->getAttribute("content");
+            
+                $lastChar = substr($miniphpyRootPath, -1);
+                
+                if (!($lastChar == "/" || $lastChar == "\\")) {
+                    $miniphpyRootPath .= DIRECTORY_SEPARATOR;
+                }
+            }
+        }
+        
         $formatInput = "";
+        $outputAttr = $formatArea->getAttribute("data-miniphpy-output");
+        
+        if (isset($outputAttr) && $outputAttr != "") {
+            // output file is set in HTML document
+            $outputFile = self::formatPath($miniphpyRootPath, $outputAttr);
+        }
+        else {
+            // default output file
+            $outputFile = $miniphpyRootPath . "minified." . $format;
+        }
         
         $attr = $format == "css" ? "href" : "src";
-        $outputFile = $format == "css" ? $input->outputFileCss : $input->outputFileJs;
         
         foreach($formatArea->childNodes as $currLinkElement) {
             $currInput = $currLinkElement->getAttribute($attr);
             
             if ($currInput != "") {
-                // Is relative path, no URL and root path is set
-                if (isset($input->path) && $input->path != "" && LittleHelpers::isAbsolutePath($currInput) == false && LittleHelpers::isValidUrl($currInput) == false) {
-                    $currInput = $input->path . DIRECTORY_SEPARATOR . $currInput;
-                }
+                $currInput = self::formatPath($miniphpyRootPath, $currInput);
                 
                 // Überprüft ob URL oder Datei existiert
                 if (LittleHelpers::isValidUrl($currInput) || file_exists($currInput)) {
                     $file = file_get_contents($currInput);
-                    $formatInput .= $file . "\n";
+                    $formatInput .= $file . " ";
                 }
                 // Maybe user missed to set the protocol to url
                 elseif (LittleHelpers::isValidUrl("http:" . $currInput)) {
                     $file = file_get_contents("http:" . $currInput);
-                    $formatInput .= $file . "\n";
+                    $formatInput .= $file . " ";
                 }
                 else {
                     // Datei nicht gefunden
@@ -71,7 +95,14 @@ class Minifier {
         }
         
         if ($status_code == 200) {
-            $output = $minifier->minify($format, $formatInput, "local");
+            if (DEBUG_MODE) {
+                $compress_option = "local";
+            }
+            else {
+                $compress_option = "remote";
+            }
+            
+            $output = $minifier->minify($format, $formatInput, $compress_option);
             
             $output_file = fopen($outputFile, "w") or die("Unable to open '$outputFile'.");
             fwrite($output_file, $output);
@@ -79,5 +110,21 @@ class Minifier {
         }
         
         return $status_code;
+    }
+    
+    public static function formatPath($miniphpyRootPath, $path) {
+        $currInput = str_replace("~/", "./", $path);
+        
+        // Insert root path to input path if it is given
+        if (isset($miniphpyRootPath)) {
+            $currInput = str_replace("./", $miniphpyRootPath, $currInput);
+        }   
+                
+        // Is relative path, no URL and root path is set
+        if (isset($miniphpyRootPath) && $miniphpyRootPath != "" && LittleHelpers::isAbsolutePath($currInput) == false && LittleHelpers::isValidUrl($currInput) == false) {
+            $currInput = $miniphpyRootPath . DIRECTORY_SEPARATOR . $currInput;
+        }
+        
+        return $currInput;     
     }
 }
