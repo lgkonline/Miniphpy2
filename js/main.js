@@ -1,22 +1,41 @@
 var ApiUri = "API";
+var Config = {};
 
 $.ajax({
     url: ApiUri,
     data: { action: "config" },
     type: "GET",
     dataType: "json",
-    success: function(config) {
-        console.log(config);
+    success: function(data) {
+        Config = data;
+        console.log(Config);
         
-        $("#bundles").loadTemplate($("#tpl-bundle"), config.inputs);
+        $("#bundles").loadTemplate($("#tpl-bundle"), Config.inputs);
         tplLoaded();
     }
 });
 
+function saveConfig() {
+    console.log(JSON.stringify(Config));
+    
+    $.ajax({
+        url: ApiUri,
+        data: { action: "set-config", config: JSON.stringify(Config) },
+        type: "POST",
+        dataType: "json",
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(data) {
+            console.log(data);
+        }
+    });
+}
+
 function tplLoaded() {
     $(".minify-btn").click(function() {
-        var inputID = $(this).attr("value");
         var bundle = $(this).closest(".bundle");
+        var inputID = bundle.attr("value");
         
         startLoading();
         
@@ -50,6 +69,15 @@ function tplLoaded() {
                 finishLoading();
             }
         });
+    });
+    
+    $(".minify-input").change(function() {
+        var inputID = $(this).closest(".bundle").attr("value");
+        var inputKey = getObjectKeyByID(Config.inputs, "inputID", inputID);
+        Config.inputs[inputKey].inputFile = $(this).val();
+        
+        console.log(Config.inputs[inputKey]);
+        saveConfig();
     });
 }
 

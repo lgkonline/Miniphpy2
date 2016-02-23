@@ -18,4 +18,17 @@ class Config {
             array_push($this->inputs, new Input($currInputFromJson));
         }
     }
+    
+    public function updateConfigFile($configJson) {
+        if (isset($configJson)) {
+            $output = $configJson;
+        }
+        else {
+            $output = json_encode($config);
+        }
+        
+        $output_file = fopen($this->configFile, "w") or die("Unable to open '$this->configFile'.");
+        fwrite($output_file, $output);
+        fclose($output_file);
+    } 
 }

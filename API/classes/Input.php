@@ -4,8 +4,6 @@ class Input {
     public $inputID;
     public $inputFile;
     public $title;
-    public $outputFileCss;
-    public $outputFileJs;
     
     public $path;
     

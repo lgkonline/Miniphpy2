@@ -17,6 +17,16 @@ if ($action_get == "config") {
     echo json_encode($config);
 }
 
+if ($action_post == "set-config") {
+    $receivedConfig = filter_input(INPUT_POST, "config");
+    $config->updateConfigFile($receivedConfig);
+    
+    echo json_encode(array(
+        "response" => "OKAY"
+    ));
+    exit;
+}
+
 if ($action_get == "minify") {
     try {
         $inputID = filter_input(INPUT_GET, "inputID");
@@ -53,4 +63,5 @@ if ($action_get == "minify") {
     catch (Exception $ex) {
         echo 'Exception abgefangen: ', $ex->getMessage(), "\n"; 
     }
+    exit;
 }
