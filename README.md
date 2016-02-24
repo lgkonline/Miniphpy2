@@ -21,6 +21,8 @@ And that's why I started Miniphpy.
 Miniphpy2 works a little bit different then the older Miniphpy.
 Instead of setting the inputs and outputs inside of Miniphpy, the config will be set in your HTML file.
 
+If you prefer to use the older Miniphpy, please go to https://github.com/lgkonline/miniphpy.
+
 
 ## Used sources
 

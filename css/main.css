@@ -7452,6 +7452,7 @@ a.list-group-item-danger.active:focus {
 }
 .bundle {
   margin-bottom: 30px;
+  min-height: 200px;
 }
 .bundle .bundle-title {
   color: #15eea0;

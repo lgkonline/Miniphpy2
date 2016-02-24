@@ -40,75 +40,80 @@ class Minifier {
         
         $formatArea = $dom->getElementById("miniphpy-" . $format);
         
-        // check if there is a root path given in the HTML document
-        $metaElements = $dom->getElementsByTagName("meta");
-        $miniphpyRootPath = dirname($input->inputFile) . DIRECTORY_SEPARATOR;
-        
-        foreach ($metaElements as $currMeta) {
-            if ($currMeta->getAttribute("name") == "miniphpy-root") {
-                // is miniphpy-root meta tag
-                $miniphpyRootPath = $currMeta->getAttribute("content");
+        if ($formatArea != "") {
+            // check if there is a root path given in the HTML document
+            $metaElements = $dom->getElementsByTagName("meta");
+            $miniphpyRootPath = dirname($input->inputFile) . DIRECTORY_SEPARATOR;
             
-                $lastChar = substr($miniphpyRootPath, -1);
+            foreach ($metaElements as $currMeta) {
+                if ($currMeta->getAttribute("name") == "miniphpy-root") {
+                    // is miniphpy-root meta tag
+                    $miniphpyRootPath = $currMeta->getAttribute("content");
                 
-                if (!($lastChar == "/" || $lastChar == "\\")) {
-                    $miniphpyRootPath .= DIRECTORY_SEPARATOR;
+                    $lastChar = substr($miniphpyRootPath, -1);
+                    
+                    if (!($lastChar == "/" || $lastChar == "\\")) {
+                        $miniphpyRootPath .= DIRECTORY_SEPARATOR;
+                    }
                 }
             }
-        }
-        
-        $formatInput = "";
-        $outputAttr = $formatArea->getAttribute("data-miniphpy-output");
-        
-        if (isset($outputAttr) && $outputAttr != "") {
-            // output file is set in HTML document
-            $outputFile = self::formatPath($miniphpyRootPath, $outputAttr);
-        }
-        else {
-            // default output file
-            $outputFile = $miniphpyRootPath . "minified." . $format;
-        }
-        
-        $attr = $format == "css" ? "href" : "src";
-        
-        foreach($formatArea->childNodes as $currLinkElement) {
-            $currInput = $currLinkElement->getAttribute($attr);
             
-            if ($currInput != "") {
-                $currInput = self::formatPath($miniphpyRootPath, $currInput);
-                
-                // Überprüft ob URL oder Datei existiert
-                if (LittleHelpers::isValidUrl($currInput) || file_exists($currInput)) {
-                    $file = file_get_contents($currInput);
-                    $formatInput .= $file . " ";
-                }
-                // Maybe user missed to set the protocol to url
-                elseif (LittleHelpers::isValidUrl("http:" . $currInput)) {
-                    $file = file_get_contents("http:" . $currInput);
-                    $formatInput .= $file . " ";
-                }
-                else {
-                    // Datei nicht gefunden
-                    $status_code = 400;
-                }
-            }        
-        }
-        
-        if ($status_code == 200) {
-            if (DEBUG_MODE) {
-                $compress_option = "local";
+            $formatInput = "";
+            $outputAttr = $formatArea->getAttribute("data-miniphpy-output");
+            
+            if (isset($outputAttr) && $outputAttr != "") {
+                // output file is set in HTML document
+                $outputFile = self::formatPath($miniphpyRootPath, $outputAttr);
             }
             else {
-                $compress_option = "remote";
+                // default output file
+                $outputFile = $miniphpyRootPath . "minified." . $format;
             }
             
-            $output = $minifier->minify($format, $formatInput, $compress_option);
+            $attr = $format == "css" ? "href" : "src";
             
-            $output_file = fopen($outputFile, "w") or die("Unable to open '$outputFile'.");
-            fwrite($output_file, $output);
-            fclose($output_file);		
+            foreach($formatArea->childNodes as $currLinkElement) {
+                $currInput = $currLinkElement->getAttribute($attr);
+                
+                if ($currInput != "") {
+                    $currInput = self::formatPath($miniphpyRootPath, $currInput);
+                    
+                    // Überprüft ob URL oder Datei existiert
+                    if (LittleHelpers::isValidUrl($currInput) || file_exists($currInput)) {
+                        $file = file_get_contents($currInput);
+                        $formatInput .= $file . " ";
+                    }
+                    // Maybe user missed to set the protocol to url
+                    elseif (LittleHelpers::isValidUrl("http:" . $currInput)) {
+                        $file = file_get_contents("http:" . $currInput);
+                        $formatInput .= $file . " ";
+                    }
+                    else {
+                        // Datei nicht gefunden
+                        $status_code = 400;
+                    }
+                }        
+            }
+            
+            if ($status_code == 200) {
+                if (DEBUG_MODE) {
+                    $compress_option = "local";
+                }
+                else {
+                    $compress_option = "remote";
+                }
+                
+                $output = $minifier->minify($format, $formatInput, $compress_option);
+                
+                $output_file = fopen($outputFile, "w") or die("Unable to open '$outputFile'.");
+                fwrite($output_file, $output);
+                fclose($output_file);		
+            }
+            
         }
-        
+        else {
+            $status_code = 100;
+        }
         return $status_code;
     }
     
