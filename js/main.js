@@ -15,21 +15,33 @@ $.ajax({
     }
 });
 
-function saveConfig() {
-    console.log(JSON.stringify(Config));
+function saveConfig(reload) {
+    if (!isSet(reload)) {
+        reload = false;
+    }
+    
+    var sendingConfig = JSON.stringify(Config);
     
     $.ajax({
-        url: ApiUri,
-        data: { action: "set-config", config: JSON.stringify(Config) },
-        type: "POST",
+        url: ApiUri + "?action=set-config",
+        type: "GET",
         dataType: "json",
+        data: { 
+            "action": "set-config", 
+            "receivedConfig": sendingConfig
+        },
         success: function(data) {
             console.log(data);
+            
+            if (reload) {
+                location.reload();
+            }
         },
         error: function(data) {
-            console.log(data);
+            console.error(data);
+            alert("There was an error on saving the config.");
         }
-    });
+    });  
 }
 
 function tplLoaded() {
@@ -79,6 +91,47 @@ function tplLoaded() {
         console.log(Config.inputs[inputKey]);
         saveConfig();
     });
+    
+    $(".remove-input").click(function() {
+        var inputID = $(this).attr("value");
+        var inputKey = getObjectKeyByID(Config.inputs, "inputID", inputID);
+        Config.inputs.splice(inputKey, 1);
+        saveConfig(true);
+    });
+    
+    $(".bundle-title").click(function() {
+        toggleBundleTitle($(this).closest(".bundle"));
+        $(this).closest(".bundle").find(".bundle-title-input").select();
+    });
+    
+    $(".bundle-title-input").blur(function() {
+        toggleBundleTitle($(this).closest(".bundle"));
+    });
+    
+    $(".bundle-title-input").change(function() {
+        $(this).closest(".bundle").find(".bundle-title").text($(this).val());
+        
+        var inputID = $(this).closest(".bundle").attr("value");
+        var inputKey = getObjectKeyByID(Config.inputs, "inputID", inputID);
+        Config.inputs[inputKey].title = $(this).val();
+        
+        console.log(Config.inputs[inputKey]);
+        saveConfig();
+    });
+}
+
+function toggleBundleTitle(bundleElement) {
+    $(bundleElement).find(".bundle-title").toggle();
+    $(bundleElement).find(".bundle-title-input").toggleClass("hide");
+}
+
+function addInput() {
+    Config.inputs.push({
+        "inputID": makeObjectID(Config.inputs, "inputID"),
+        "inputFile": "",
+        "title": "No title"
+    });
+    saveConfig(true);
 }
 
 function startLoading() {
@@ -88,3 +141,9 @@ function startLoading() {
 function finishLoading() {
     $("#loading, #loading-wrapper").fadeOut();
 }
+
+$(document).ready(function() {
+    $(".lgk-logo").tooltip({
+        placement: "left"
+    });
+});

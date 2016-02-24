@@ -2,6 +2,9 @@
 
 header("Content-type: text/json");
 
+$isApi = true;
+require "../index.php";
+
 require "classes/Config.php";
 require "classes/Input.php";
 require "classes/LittleHelpers.php";
@@ -17,8 +20,10 @@ if ($action_get == "config") {
     echo json_encode($config);
 }
 
-if ($action_post == "set-config") {
-    $receivedConfig = filter_input(INPUT_POST, "config");
+
+if ($action_get == "set-config") {
+    $receivedConfig = filter_input(INPUT_GET, "receivedConfig");
+
     $config->updateConfigFile($receivedConfig);
     
     echo json_encode(array(

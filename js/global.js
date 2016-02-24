@@ -21,7 +21,7 @@ function getObjectKeyByID(objArray, IDname, ID) {
 }
 
 function makeObjectID(objArray, IDname) {
-   var newID = 0;
+   var newID = 1;
    while (isSet(getObjectByID(objArray, IDname, newID))) {
       newID++;
    }

@@ -844,11 +844,15 @@ data.offset=data.offset||{}
 if(data.offsetBottom!=null)data.offset.bottom=data.offsetBottom
 if(data.offsetTop!=null)data.offset.top=data.offsetTop
 Plugin.call($spy,data)})})}(jQuery);function isSet(variable){return typeof variable!="undefined"&&variable!=null;}
-function getObjectFromArray(objArray,IDname,ID){for(var i=0;i<objArray.length;i++){if(objArray[IDname]==ID){return objArray[IDname];}}
+function getObjectByID(objArray,IDname,ID){for(var i=0;i<objArray.length;i++){if(objArray[i][IDname]==ID){return objArray[i];}}
 return null;}
-function makeID(objArray,IDname){var newID=1;while(isSet(getObjectFromArray(objArray,IDname,newID))){newID++;}
-return newID;}var ApiUri="API";$.ajax({url:ApiUri,data:{action:"config"},type:"GET",dataType:"json",success:function(config){console.log(config);$("#bundles").loadTemplate($("#tpl-bundle"),config.inputs);tplLoaded();}});function tplLoaded(){$(".minify-btn").click(function(){var bundle=$(this).closest(".bundle");var inputID=bundle.attr("value");startLoading();$.ajax({url:ApiUri,data:{action:"minify",inputID:inputID},type:"GET",dataType:"json",success:function(data){console.log(data);bundle.find(".bundle-error").addClass("hide");},error:function(data){console.log(data);var details="";if(isSet(data.responseJSON)){if(data.responseJSON.CSS>200){details+="There was a problem progressing your CSS files. ";}
+function getObjectKeyByID(objArray,IDname,ID){for(var i=0;i<objArray.length;i++){if(objArray[i][IDname]==ID){return i;}}
+return null;}
+function makeObjectID(objArray,IDname){var newID=0;while(isSet(getObjectByID(objArray,IDname,newID))){newID++;}
+return newID;}var ApiUri="API";var Config={};$.ajax({url:ApiUri,data:{action:"config"},type:"GET",dataType:"json",success:function(data){Config=data;console.log(Config);$("#bundles").loadTemplate($("#tpl-bundle"),Config.inputs);tplLoaded();}});function saveConfig(){console.log();var sendingConfig=JSON.stringify(Config);$.ajax({url:ApiUri+"?action=set-config",type:"GET",dataType:"json",data:{"action":"set-config","receivedConfig":sendingConfig},success:function(data){console.log(data);},error:function(data){console.log(data);}});}
+function tplLoaded(){$(".minify-btn").click(function(){var bundle=$(this).closest(".bundle");var inputID=bundle.attr("value");startLoading();$.ajax({url:ApiUri,data:{action:"minify",inputID:inputID},type:"GET",dataType:"json",success:function(data){console.log(data);bundle.find(".bundle-error").addClass("hide");},error:function(data){console.log(data);var details="";if(isSet(data.responseJSON)){if(data.responseJSON.CSS>200){details+="There was a problem progressing your CSS files. ";}
 if(data.responseJSON.JS>200){details+="There was a problem progressing your JS files. ";}}
-bundle.find(".bundle-error").removeClass("hide");bundle.find(".bundle-error-details").empty();bundle.find(".bundle-error-details").text(details);},complete:function(){finishLoading();}});});$(".minify-input").change(function(){});}
+bundle.find(".bundle-error").removeClass("hide");bundle.find(".bundle-error-details").empty();bundle.find(".bundle-error-details").text(details);},complete:function(){finishLoading();}});});$(".minify-input").change(function(){var inputID=$(this).closest(".bundle").attr("value");var inputKey=getObjectKeyByID(Config.inputs,"inputID",inputID);Config.inputs[inputKey].inputFile=$(this).val();console.log(Config.inputs[inputKey]);saveConfig();});}
 function startLoading(){$("#loading, #loading-wrapper").fadeIn();}
 function finishLoading(){$("#loading, #loading-wrapper").fadeOut();}
+$(document).ready(function(){$(".lgk-logo").tooltip({placement:"left"});});

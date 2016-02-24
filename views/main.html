@@ -45,7 +45,21 @@
 		</header>
 		
 		<main id="main">
-			<div class="container">	
+			<div class="container">
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-default btn-lg btn-block">
+                            Instructions
+                        </button>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-primary btn-lg btn-block" onclick="addInput()">
+                            Add
+                        </button>
+                    </div>
+                </div>
+                	
                 <div id="bundles" class="row"></div>
 			</div>
 		</main>
@@ -67,7 +81,7 @@
 					</div>
 					
 					<div class="col-md-4">
-						<a href="http://lgk.io" target="_blank" class="lgk-logo pull-right">
+						<a href="http://lgk.io" target="_blank" class="lgk-logo pull-right" title="&copy;&nbsp;2016&nbsp;LGK">
 							<img src="http://lib.lgkonline.com/logo.png" alt="LGK">
 						</a>
 					</div>
@@ -84,20 +98,21 @@
                             <div class="bundle-error-details"></div>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h1 class="bundle-title" data-content="title"></h1>
-                                
-                                <input type="text" class="form-control input-lg hide" data-value="title">
-                            </div>
-                        </div>
-                        
-                        <h3>Input</h3>
-                        <input type="text" class="minify-input form-control" data-value="inputFile">
-                        
                         <button type="button" class="minify-btn btn btn-primary btn-lg" data-value="inputID">
                             Minify
                         </button>
+                        
+                        <button type="button" class="remove-input btn btn-default btn-lg" data-value="inputID">
+                            Remove
+                        </button>
+                        
+                        <h1 class="bundle-title" data-content="title"></h1>
+                        <input type="text" class="bundle-title-input form-control input-lg hide" data-value="title">
+                        
+                        <div class="input-group">
+                            <span class="input-group-addon">Input</span>
+                            <input type="text" class="minify-input form-control" data-value="inputFile" placeholder="Enter an input file">
+                        </div>
                     </div>
                 </div>
             </div>
