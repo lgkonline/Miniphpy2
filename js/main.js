@@ -8,7 +8,6 @@ $.ajax({
     dataType: "json",
     success: function(data) {
         Config = data;
-        console.log(Config);
         
         $("#bundles").loadTemplate($("#tpl-bundle"), Config.inputs);
         tplLoaded();
@@ -31,8 +30,6 @@ function saveConfig(reload) {
             "receivedConfig": sendingConfig
         },
         success: function(data) {
-            console.log(data);
-            
             if (reload) {
                 location.reload();
             }
@@ -57,11 +54,10 @@ function tplLoaded() {
             type: "GET",
             dataType: "json",
             success: function(data) {
-                console.log(data);
                 bundle.find(".bundle-error").addClass("hide");
             },
             error: function(data) {
-                console.log(data);
+                console.error(data);
                 var details = "";
                 
                 if (isSet(data.responseJSON)) {
@@ -87,8 +83,6 @@ function tplLoaded() {
         var inputID = $(this).closest(".bundle").attr("value");
         var inputKey = getObjectKeyByID(Config.inputs, "inputID", inputID);
         Config.inputs[inputKey].inputFile = $(this).val();
-        
-        console.log(Config.inputs[inputKey]);
         saveConfig();
     });
     
@@ -114,8 +108,6 @@ function tplLoaded() {
         var inputID = $(this).closest(".bundle").attr("value");
         var inputKey = getObjectKeyByID(Config.inputs, "inputID", inputID);
         Config.inputs[inputKey].title = $(this).val();
-        
-        console.log(Config.inputs[inputKey]);
         saveConfig();
     });
 }

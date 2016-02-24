@@ -1,6 +1,6 @@
 <?php
 
-define("DEBUG_MODE", true);
+define("DEBUG_MODE", false);
 define("APP_VERSION", "2.0");
 
 if (!(isset($isApi) && $isApi == true)) {
