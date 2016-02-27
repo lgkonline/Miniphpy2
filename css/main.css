@@ -7683,6 +7683,8 @@ textarea.form-control.config-modal-code {
 }
 .lgk-logo {
   opacity: .5;
+  font-size: 1.5em;
+  color: #333333;
 }
 .lgk-logo img {
   height: 24px;

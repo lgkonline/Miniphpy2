@@ -1,1 +1,1 @@
-{"configFile":"../config.json","configVersion":"1.0","inputs":[{"inputID":1,"inputFile":"../_demo/index.php","title":"Demo","path":"../_demo"}]}
+{"configFile":"../config.json","configVersion":"1.0","inputs":[{"inputID":1,"inputFile":"../_demo/index.php","title":"Demo","path":"../_demo"},{"inputID":2,"inputFile":"C:\\xampp\\htdocs\\Miniphpy2\\views\\main.html","title":"Miniphpy2","path":""}]}

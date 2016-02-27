@@ -4,10 +4,11 @@
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-        <meta name="miniphpy-root" content="C:\xampp\htdocs\go\Miniphpy2">
-		<title>Miniphpy2</title>
+        <meta name="miniphpy-root" content="C:\xampp\htdocs\Miniphpy2">
+		<title>Miniphpy</title>
 		
 		<link rel="icon" type="image/png" href="images/logo-icon-only.png">
+        <link href="http://lib.lgkonline.com/lgk-icons/style.css" rel="stylesheet">
 		
 		<?php if (DEBUG_MODE == true) : ?>
             <section id="miniphpy-css" data-miniphpy-output="css/minified.css">
@@ -49,18 +50,21 @@
                 <div class="row">
                     <div class="col-md-4">
                         <button type="button" class="header-btn btn btn-default btn-lg btn-block" data-toggle="modal" data-target="#instructions-modal">
+                            <span class="icon-book"></span>
                             Instructions
                         </button>
                     </div>
                     
                     <div class="col-md-4">
                         <button type="button" class="header-btn btn btn-primary btn-lg btn-block" onclick="addInput()">
+                            <span class="icon-plus"></span>
                             Add
                         </button>
                     </div>
                     
                     <div class="col-md-4">
 						<a href="http://github.com/lgkonline/miniphpy2" target="_blank" class="header-btn btn btn-default btn-lg btn-block">
+                            <span class="icon-github"></span>
 							Find Miniphpy on GitHub
 						</a>
                     </div>
@@ -75,6 +79,7 @@
 				<div class="row">
 					<div class="col-md-4">
 						<a href="http://twitter.com/lgkonline" target="_blank" class="btn btn-primary btn-sm btn-outline">
+                            <span class="icon-twitter4"></span>
 							Follow me on Twitter: @lgkonline
 						</a>
 					</div>
@@ -85,7 +90,7 @@
 					
 					<div class="col-md-4">
 						<a href="http://lgk.io" target="_blank" class="lgk-logo pull-right" title="&copy;&nbsp;2016&nbsp;LGK">
-							<img src="http://lib.lgkonline.com/logo.png" alt="LGK">
+							<span class="icon-lgk"></span>
 						</a>
 					</div>
 				</div>
@@ -164,7 +169,9 @@
                         <input type="text" class="bundle-title-input form-control input-lg hide" data-value="title">
                         
                         <div class="input-group">
-                            <span class="input-group-addon" style="color: #fff;">Input</span>
+                            <span class="input-group-addon" style="color: #fff;">
+                                <span class="icon-file-text2"></span>
+                            </span>
                             <input type="text" class="minify-input form-control" data-value="inputFile" placeholder="Enter an input file">
                         </div>
                     </div>
