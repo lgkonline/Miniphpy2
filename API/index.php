@@ -60,8 +60,8 @@ if ($action_get == "minify") {
             http_response_code($status_code);
             
             echo json_encode(array(
-                "JS" => $codes[0],
-                "CSS" => $codes[1]
+                "CSS" => $codes[0],
+                "JS" => $codes[1]
             ));
         }  
     }

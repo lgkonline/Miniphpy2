@@ -22,9 +22,11 @@ class LittleHelpers {
 			$tagName = $default;
 			$version = "unknown";
 		}
+        
+        $onlyVersionNumber = substr($tagName, 1);
 		
 		$retVal = new stdClass();
-		$retVal->downloadUrl = "https://github.com/$repository/releases/download/$tagName/Miniphpy.$tagName.zip";
+		$retVal->downloadUrl = "https://github.com/$repository/releases/download/$tagName/Miniphpy$onlyVersionNumber.zip";
 		$retVal->version = $version;
 		
 		return $retVal;
