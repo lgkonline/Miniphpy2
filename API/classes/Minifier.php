@@ -43,7 +43,8 @@ class Minifier {
         if ($formatArea != "") {
             // check if there is a root path given in the HTML document
             $metaElements = $dom->getElementsByTagName("meta");
-            $miniphpyRootPath = dirname($input->inputFile) . DIRECTORY_SEPARATOR;
+            // $miniphpyRootPath = dirname($input->inputFile) . DIRECTORY_SEPARATOR;
+            $miniphpyRootPath = "";
             
             foreach ($metaElements as $currMeta) {
                 if ($currMeta->getAttribute("name") == "miniphpy-root") {
@@ -89,6 +90,11 @@ class Minifier {
                         $formatInput .= $file . " ";
                     }
                     else {
+                        print_r($currLinkElement->getAttribute($attr));
+                        echo "<br>";
+                        print_r($currInput);
+                        exit;
+                        
                         // Datei nicht gefunden
                         $status_code = 400;
                     }
